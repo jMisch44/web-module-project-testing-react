@@ -31,6 +31,7 @@ test("renders the summury test passed as prop", () => {
   render(<Episode episode={testEpisode} />);
 
   const summaryText = screen.queryByText(/a specific summary statement/i);
+
   expect(summaryText).toBeInTheDocument();
   expect(summaryText).not.toBeFalsy();
   expect(summaryText).toBeTruthy();
@@ -40,6 +41,7 @@ test("renders default image when image is not defined", () => {
   render(<Episode episode={testEpisodeWithoutImage} />);
 
   const episodeImage = screen.queryByRole("img");
+
   expect(episodeImage).toHaveAttribute("alt", "./stranger_things.png");
 });
 
