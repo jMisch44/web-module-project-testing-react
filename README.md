@@ -19,7 +19,7 @@ Get the project fired up and start using it as a user would. Try to go through t
 
 ## Instructions
 ### Task 1: Project Set Up
-* [ ] Create a forked copy of this project.
+* [x] Create a forked copy of this project.
 * [ ] Clone your OWN version of the repository in your terminal
 * [ ] cd into the project base directory `cd web-module-project-reducer-pattern`
 * [ ] Download project dependencies by running `npm install`
