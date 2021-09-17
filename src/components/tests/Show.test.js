@@ -1,26 +1,82 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-import Show from './../Show';
+import Show from "./../Show";
 
 const testShow = {
-    //add in approprate test data structure here.
-}
+  name: "Stranger Things",
+  seasons: [
+    {
+      episodes: [],
+      id: 0,
+      name: "Season 1",
+    },
+    {
+      episodes: [],
+      id: 1,
+      name: "Season 2",
+    },
+  ],
+  summary:
+    "A love letter to the '80s classics that captivated a generation, Stranger Things is set in 1983 Indiana, where a young boy vanishes into thin air.",
+};
 
-test('renders testShow and no selected Season without errors', ()=>{
+test("renders testShow and no selected Season without errors", () => {
+  render(<Show show={testShow} selectedSeason={"none"} />);
 });
 
-test('renders Loading component when prop show is null', () => {
+test("renders Loading component when prop show is null", () => {
+  render(<Show show={null} />);
+
+  const loadingStatement = screen.queryByText(/Fetching data.../i);
+
+  expect(loadingStatement).toBeInTheDocument();
+  expect(loadingStatement).toBeTruthy();
+  expect(loadingStatement).not.toBeNull();
 });
 
-test('renders same number of options seasons are passed in', ()=>{
+test("renders same number of options seasons are passed in", () => {
+  render(<Show show={testShow} selectedSeason={"none"} />);
+
+  const seasonDropDown = screen.queryAllByTestId("season-option");
+
+  expect(seasonDropDown).toHaveLength(2);
 });
 
-test('handleSelect is called when an season is selected', () => {
+test("handleSelect is called when an season is selected", () => {
+  const mockHandleSelect = jest.fn();
+
+  render(
+    <Show
+      show={testShow}
+      selectedSeason={"none"}
+      handleSelect={mockHandleSelect}
+    />
+  );
+
+  const seasonDropDown = screen.queryByLabelText(/Select A Season/i);
+  const optionOne = screen.queryByRole("option", { name: "Season 1" });
+  const optionTwo = screen.queryByRole("option", { name: "Season 2" });
+  userEvent.selectOptions(seasonDropDown, ["1"]);
+
+  expect(optionOne.selected).toBeFalsy();
+  expect(optionTwo.selected).toBeTruthy();
 });
 
-test('component renders when no seasons are selected and when rerenders with a season passed in', () => {
+test("component renders when no seasons are selected and when rerenders with a season passed in", () => {
+  const { rerender } = render(<Show show={testShow} selectedSeason={"none"} />);
+
+  let episodeComponent = screen.queryByTestId("episode-container");
+  //const h1 = within(episodecomponent).getby
+
+  expect(episodeComponent).toBeNull();
+  expect(episodeComponent).not.toBeInTheDocument();
+
+  rerender(<Show show={testShow} selectedSeason={"0"} />);
+  episodeComponent = screen.queryAllByTestId("episode-container");
+  console.log(episodeComponent);
+  expect(episodeComponent).toHaveLength(0);
 });
 
 //Tasks:
